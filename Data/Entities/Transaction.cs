@@ -3,12 +3,12 @@
 /// <summary>
 /// Класс для хранения информации о транзакции
 /// </summary>
-public class Transaction
+public record Transaction
 {
     /// <summary>
     /// Идентификатор транзакции
     /// </summary>
-    public required Guid Id { get; init; }
+    public Guid Id { get; init; }
 
     /// <summary>
     /// Дата создания транзакции
@@ -45,12 +45,12 @@ public class Transaction
 /// <summary>
 /// Класс для хранения информации о проводках
 /// </summary>
-public class TransactionEntry
+public record TransactionEntry
 {
     /// <summary>
     /// Идентификатор
     /// </summary>
-    public required Guid Id { get; init; }
+    public Guid Id { get; init; }
 
     /// <summary>
     /// Идентификатор транзакции с которой связана проводка

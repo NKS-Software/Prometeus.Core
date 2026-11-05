@@ -81,21 +81,22 @@ public class TransactionRepository(SqliteConnection connection) : RepositoryBase
     /// <summary>
     /// Создаёт новую транзакцию
     /// </summary>
-    /// <param name="transaction">Данные транзакции (Id, CreatedAt)</param>
     /// <returns>Transaction с заполненными данными если удалось создать, иначе null</returns>
     /// <exception cref="SqliteException"></exception>
-    public async Task<Transaction?> CreateAsync(Transaction transaction)
+    public async Task<Transaction?> CreateAsync()
     {
         using var command = Connection.CreateCommand();
         command.CommandText = Transactions.Create;
-        command.Parameters.AddWithValue("@Id", transaction.Id.ToString());
+        command.Parameters.AddWithValue("@Id", Guid.CreateVersion7().ToString());
         command.Parameters.AddWithValue("@CurrentDateTime", SharedTimeProvider.Read(DateTime.UtcNow).ToFormattedString());
 
         var reader = await command.ExecuteReaderAsync();
         return await reader.ReadAsync() ? new Transaction
         {
             Id = reader.GetGuid("Id"),
-            CreatedAt = reader.GetDateTime("CreatedAt")
+            CreatedAt = reader.GetDateTime("CreatedAt"),
+            Status = TransactionStatus.Pending,
+            Metadata = []
         } : null;
     }
 
@@ -118,15 +119,22 @@ public class TransactionRepository(SqliteConnection connection) : RepositoryBase
     public async Task<TransactionEntry?> CreateEntryAsync(TransactionEntry entry)
     {
         using var command = Connection.CreateCommand();
+        var newId = Guid.CreateVersion7();
         command.CommandText = Transactions.CreateEntry;
-        command.Parameters.AddWithValue("@Id", entry.Id.ToString());
+        command.Parameters.AddWithValue("@Id", newId.ToString());
         command.Parameters.AddWithValue("@TransactionId", entry.TransactionId.ToString());
         command.Parameters.AddWithValue("@AccountNumber", entry.AccountNumber);
         command.Parameters.AddWithValue("@Amount", entry.Amount);
         command.Parameters.AddWithValue("@Type", (int)entry.Type);
-
+        
         var reader = await command.ExecuteReaderAsync();
-        return await reader.ReadAsync() ? entry : null;
+
+        if (await reader.ReadAsync())
+        {
+            entry = entry with { Id = newId }; // ← ПРИСВАИВАЕМ!
+            return entry;
+        }
+        return null;
     }
 
     /// <summary>
