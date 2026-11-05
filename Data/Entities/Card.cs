@@ -1,6 +1,6 @@
 ﻿namespace Prometeus.Core.Data.Entities;
 
-public class Card
+public record Card
 {
     /// <summary>
     /// Уникальный номер карты

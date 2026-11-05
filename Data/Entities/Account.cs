@@ -1,6 +1,6 @@
 ﻿namespace Prometeus.Core.Data.Entities;
 
-public class Account
+public record Account
 {
     /// <summary>
     /// Идентификатор владельца счёта

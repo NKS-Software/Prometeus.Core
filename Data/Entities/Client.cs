@@ -3,7 +3,7 @@
 /// <summary>
 /// Класс для хранения данных о клиенте
 /// </summary>
-public class Client
+public record Client
 {
     /// <summary>
     /// Идентификатор клиента (UUID v7)
