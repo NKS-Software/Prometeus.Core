@@ -35,6 +35,7 @@ internal static class Cards
     /// </summary>
     public static string GetByNumber => """
         SELECT Number, AccountNumber, ValidUntil, CardHolderName, Status
+        FROM Cards
         WHERE Number = @Number 
             AND ValidUntil >= @CurrentDate
         """;
