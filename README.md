@@ -54,6 +54,8 @@
 
 ## 🏗️ Архитектура
 
+├──Constants/ </br> # Общие константы и Enum
+├──Models/ </br> # базовые DTO
 ├──Data/ </br>
 │ ├──Entities/ # Client, Account, Card, Transaction </br>
 │ ├──Repositories/ # ClientRepository, AccountRepository, ... </br>
