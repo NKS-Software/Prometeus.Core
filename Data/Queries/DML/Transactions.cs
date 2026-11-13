@@ -104,7 +104,7 @@ internal static class Transactions
     public static string CreateEntry => """
         INSERT INTO TransactionEntries(Id, TransactionId, AccountNumber, Amount, Type)
         SELECT @Id, @TransactionId, @AccountNumber, @Amount, @Type
-        WHERE EXISTS(SELECT TRUE FROM Transactions WHERE Id = @TransactionId)
+        WHERE EXISTS(SELECT TRUE FROM Transactions WHERE Id = @TransactionId AND CompletedAt IS NULL AND RejectReason IS NULL)
         AND EXISTS(SELECT TRUE FROM Accounts WHERE Number = @AccountNumber AND ClosedAt IS NULL)
         AND CAST(@Amount AS DECIMAL) > 0
         AND @Type IN(-1, 1)
